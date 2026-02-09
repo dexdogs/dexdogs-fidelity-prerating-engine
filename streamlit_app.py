@@ -7,14 +7,40 @@ from pypdf import PdfReader
 
 st.set_page_config(page_title="Fidelity Pre-Ratings Engine // dexdogs", layout="wide")
 
-# --- APP STYLING ---
+# --- CUSTOM CSS (Light Theme) ---
 st.markdown("""
     <style>
-    .main { background-color: #0e1117; color: white; }
-    .stMetric { border: 1px solid #444; padding: 15px; border-radius: 12px; background-color: #161b22; }
-    [data-testid="stMetricValue"] { color: white !important; }
-    [data-testid="stMetricLabel"] { color: #888 !important; }
-    .stFileUploader { padding: 20px; border: 1px dashed #444; border-radius: 10px; }
+    /* Main Background */
+    .main { 
+        background-color: #f8f9fa; 
+        color: #000000; 
+    }
+    
+    /* Metric Cards */
+    .stMetric { 
+        background-color: #ffffff; 
+        border: 1px solid #e0e0e0; 
+        padding: 15px; 
+        border-radius: 12px; 
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    
+    /* Metric Text Colors */
+    [data-testid="stMetricValue"] { 
+        color: #000000 !important; 
+    }
+    [data-testid="stMetricLabel"] { 
+        color: #555555 !important; 
+        font-weight: 600;
+    }
+    
+    /* File Uploader */
+    .stFileUploader { 
+        background-color: #ffffff;
+        padding: 20px; 
+        border: 1px dashed #cccccc; 
+        border-radius: 10px; 
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -175,7 +201,7 @@ if run_dashboard:
                 'threshold': {'line': {'color': "white", 'width': 4}, 'thickness': 0.75, 'value': 80}
             }
         ))
-        fig.update_layout(paper_bgcolor="#0e1117", font={'color': "white"}, height=300, margin=dict(t=30,b=30))
+        fig.update_layout(paper_bgcolor="#000000", font={'color': "white"}, height=300, margin=dict(t=60,b=30))
         st.plotly_chart(fig, use_container_width=True)
 
     # SECTION 3: GAP ANALYSIS & ADVICE
