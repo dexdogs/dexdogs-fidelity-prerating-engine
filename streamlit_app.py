@@ -5,7 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from pypdf import PdfReader
 
-st.set_page_config(page_title="dexdogs | Ratings Engine", layout="wide")
+st.set_page_config(page_title="Fidelity Pre-Ratings Engine // dexdogs", layout="wide")
 
 # --- APP STYLING ---
 st.markdown("""
@@ -18,8 +18,8 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-st.title("💎 dexdogs: Carbon Fidelity Engine")
-st.caption("Predicting AAA-D Market Ratings: Manual Simulation & AI EPD Analysis")
+st.title("Fidelity Pre-Ratings Engine Demo // dexdogs")
+st.caption("Predicting AAA-D Market Ratings: Manual & EPD Input Simulation")
 
 # --- GLOBAL VARIABLES ---
 score_audit = 0
@@ -32,8 +32,8 @@ is_manual = False
 
 # --- SIDEBAR: INPUT METHOD SELECTION ---
 with st.sidebar:
-    st.header("🎛️ Input Configuration")
-    input_mode = st.radio("Select Data Input Mode:", ["Manual Entry", "AI EPD Analysis"])
+    st.header("Input Configuration")
+    input_mode = st.radio("Select Data Input Mode:", ["Manual Entry", "EPD Input"])
     
     st.divider()
 
@@ -43,7 +43,7 @@ with st.sidebar:
         project_type = st.selectbox("Project Type", 
                                   ["Biochar", "Afforestation (ARR)", "Renewable Energy", "Concrete/Construction"])
         
-        # Data Source (The 'BeZero' Factor)
+        # Data Source (The Raters)
         source_input = st.selectbox("Data Source Type", 
                                    ["A. Direct Sensor (IoT) / Remote Sensing", 
                                     "B. Metered / Hybrid Data", 
@@ -78,11 +78,11 @@ with st.sidebar:
         score_freq = freq_input / 5
 
     else:
-        # AI EPD ANALYSIS MODE
+        # EPD INGESTION MODE
         is_manual = False
-        st.subheader("📄 EPD Ingestion")
+        st.subheader("EPD Input")
         uploaded_file = st.file_uploader("Upload EPD (PDF)", type="pdf")
-        st.info("Upload a PDF to auto-extract fidelity attributes using AI text scanning.")
+        st.info("Upload a PDF to auto-extract fidelity attributes using text scanning.")
 
 # --- EPD PARSING LOGIC ---
 def analyze_epd(file):
@@ -124,7 +124,7 @@ def analyze_epd(file):
 # --- MAIN EXECUTION ---
 run_dashboard = False
 
-if input_mode == "AI EPD Analysis" and uploaded_file is not None:
+if input_mode == "EPD Input" and uploaded_file is not None:
     with st.spinner("Scanning document for fidelity markers..."):
         project_type, audit_label, score_audit, source_label, score_source = analyze_epd(uploaded_file)
         score_freq = 5 # EPDs are usually static, so low frequency score
@@ -138,14 +138,14 @@ if run_dashboard:
     base_score = 40
     fidelity_score = min(max(base_score + score_audit + score_source + score_freq, 0), 100)
     
-    # DETERMINE RATING
+    # PRE-DETERMINE RATING
     if fidelity_score >= 80: rating, color, price = "AAA", "#00d4ff", 18.50
     elif fidelity_score >= 60: rating, color, price = "A", "#2ecc71", 14.20
     elif fidelity_score >= 40: rating, color, price = "BBB", "#f1c40f", 9.00
     else: rating, color, price = "D", "#c0392b", 2.50
 
     # SECTION 1: DATA INTELLIGENCE
-    st.subheader(f"📂 Analysis: {project_type}")
+    st.subheader(f"Analysis: {project_type}")
     c1, c2, c3 = st.columns(3)
     c1.info(f"**Data Source Strategy:**\n\n{source_label}")
     c2.success(f"**Verification Protocol:**\n\n{audit_label}")
@@ -153,7 +153,7 @@ if run_dashboard:
     
     st.divider()
 
-    # SECTION 2: THE RATING ENGINE
+    # SECTION 2: THE PRE-RATING ENGINE
     row2_col1, row2_col2 = st.columns([1, 2])
     with row2_col1:
         st.metric("Predicted Market Rating", rating, delta="High Fidelity" if fidelity_score > 70 else "Information Risk")
@@ -164,7 +164,7 @@ if run_dashboard:
         fig = go.Figure(go.Indicator(
             mode = "gauge+number",
             value = fidelity_score,
-            title = {'text': "BeZero/Sylvera Fidelity Confidence"},
+            title = {'text': "The Raters' Fidelity Confidence"},
             gauge = {
                 'axis': {'range': [None, 100], 'tickcolor': "white"},
                 'bar': {'color': color},
@@ -179,7 +179,7 @@ if run_dashboard:
         st.plotly_chart(fig, use_container_width=True)
 
     # SECTION 3: GAP ANALYSIS & ADVICE
-    st.subheader("💡 Fidelity Optimization")
+    st.subheader("Fidelity Optimization")
     if fidelity_score < 80:
         st.write("To achieve **AAA** status and unlock the price premium, dexdogs recommends:")
         if score_source < 20:
@@ -191,9 +191,9 @@ if run_dashboard:
 
 else:
     # IDLE STATE
-    st.info("👈 Select an input method in the sidebar to begin.")
+    st.info("Select an input method in the sidebar to begin.")
     st.markdown("""
     ### dexdogs Fidelity Engine Modes:
     1.  **Manual Entry**: Simulate how changes in audit levels and sensors impact your credit rating.
-    2.  **AI EPD Analysis**: Upload a PDF to automatically extract fidelity markers and predict pricing.
+    2.  **EPD Input**: Upload a PDF to automatically extract fidelity markers and predict pricing.
     """)
